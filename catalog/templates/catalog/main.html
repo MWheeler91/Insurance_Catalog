@@ -1,0 +1,129 @@
+{% extends 'catalog/base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% crispy ItemFilter ItemFilter.helper %}
+{% load humanize %}
+
+
+{% block content %}
+   <div class="container">
+        <div class="row">
+            <div class="col-4 text-center">
+                <h1>New Category</h1>
+                <form class="" method="POST">
+                    {% csrf_token %}
+                    {{ category|crispy }}
+                    <button type='submit' class="btn btn-primary" name=''>Save</button>
+                </form>
+            </div>
+            <div class="col-4 text-center">
+                <h1>New Condition</h1>
+                <form class="" method="POST">
+                    {% csrf_token %}
+                    {{ condition|crispy }}
+                    <button type='submit' class="btn btn-primary" name=''>Save</button>
+                </form>
+            </div>
+            <div class="col-4 text-center">
+                <h1>New Room</h1>
+                <form class="" method="POST">
+                    {% csrf_token %}
+                    {{ room|crispy }}
+                    <button type='submit' class="btn btn-primary" name=''>Save</button>
+                </form>
+            </div>
+        </div>
+   </div>
+    <hr>
+    <div class="container">
+        <div class="row text-center">
+            <h1>New Item</h1>
+            <form class="" method="POST">
+                {% csrf_token %}
+                {{ item|crispy }}
+                <button type='submit' class="btn btn-primary" name=''>Save</button>
+            </form>
+        </div>
+
+    </div>
+       <hr>
+
+        <div class="container text-center">
+            <h1>Filtering</h1>
+            <form method="get">
+                <div class="row">
+                    <div class="col-6">
+                        {{ filter.form.item_name|as_crispy_field }}
+                    </div>
+                    <div class="col-6">
+                        {{ filter.form.item_description|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        {{ filter.form.item_category|as_crispy_field }}
+                    </div>
+                    <div class="col-4">
+                        {{ filter.form.condition|as_crispy_field }}
+                    </div>
+                     <div class="col-4">
+                        {{ filter.form.room|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        {{ filter.form.value_start|as_crispy_field }}
+                    </div>
+                    <div class="col-3">
+                        {{ filter.form.value_end|as_crispy_field }}
+                    </div>
+                    <div class="col-3">
+                        {{ filter.form.start_date|as_crispy_field }}
+                    </div>
+                    <div class="col-3">
+                        {{ filter.form.end_date|as_crispy_field }}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary m-2">Search</button>
+                <a class="btn btn-secondary" href="{% url 'catalog:main' %}">Reset</a>
+            </form>
+
+        </div>
+        <div class="row text-center">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col"> </th>
+                        <th scope="col">Item ID</th>
+                        <th scope="col">Item Name</th>
+                        <th scope="col">Item Description</th>
+                        <th scope="col">Item Category</th>
+                        <th scope="col">Condition</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Room</th>
+                        <th scope="col">Date Entered</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in item_list %}
+                        <th>{{ forloop.counter }}</th>
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.item_name }}</td>
+                            <td>{{ item.item_description }}</td>
+                            <td>{{ item.item_category }}</td>
+                            <td>{{ item.condition }}</td>
+                            <td>${{ item.value|floatformat:2|intcomma }}</td>
+                            <td>{{ item.room }}</td>
+                            <td>{{ item.date_entered }}</td>
+                            <td> <a class="btn btn-primary" href="{% url 'catalog:edit' pk=item.id %}">Edit</a></td>
+                            <td><a class="btn btn-danger" href="{% url 'catalog:delete' pk=item.id %}">Delete</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+   </div>
+{% endblock %}
+
+<button type="good"></button>
+<button type"submit"="">
