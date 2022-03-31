@@ -6,11 +6,26 @@ from django.views.generic import (TemplateView, ListView, DetailView,
 from .models import *
 from .forms import *
 from .filters import *
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+
 # Create your views here.
 
 
 # @api_view(['GET'])
 def mainview(request):
+    item_list = Item.objects.all()
+    paginator = Paginator(item_list, 25)  # Show 25 contacts per page.
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.get_page(page_number)  # returns the desired page object
+    except PageNotAnInteger:
+        # if page_number is not an integer then assign the first page
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        # if page is empty then return last page
+        page_obj = paginator.page(paginator.num_pages)
+
     if request.method == 'POST':
         room_form = RoomForm(request.POST, prefix='room')
         category_form = CategoryForm(request.POST, prefix='category')
@@ -33,10 +48,23 @@ def mainview(request):
         condition_form = ConditionForm(prefix='condition')
         item_form = ItemForm(prefix='item')
 
-        item_list = Item.objects.all()
+        # item_list = Item.objects.all()
         item_filter = ItemFilter(request.GET, queryset=item_list)
         if item_filter.is_valid():
             item_list = item_filter.qs
+
+        # paginator = Paginator(item_list, 25)  # Show 25 contacts per page.
+        # page_number = request.GET.get('page')
+        # try:
+        #     page_obj = paginator.get_page(page_number)  # returns the desired page object
+        # except PageNotAnInteger:
+        #     # if page_number is not an integer then assign the first page
+        #     page_obj = paginator.page(1)
+        # except EmptyPage:
+        #     # if page is empty then return last page
+        #     page_obj = paginator.page(paginator.num_pages)
+
+
         # serializer = ProductSerializer(queryset, many=True)
         # context = {}
         # context["itemlist"] = Item.objects.all()
@@ -46,7 +74,8 @@ def mainview(request):
                                                  'condition': condition_form,
                                                  'item': item_form,
                                                  'item_list': item_list,
-                                                 'filter': item_filter
+                                                 'filter': item_filter,
+                                                 'page_obj': page_obj,
                                                  })
 
 
