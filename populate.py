@@ -20,7 +20,7 @@ fakegen = Faker()
 def main():
     print("Populating the script!")
 
-    FakeItem(100)
+    FakeItem(30000)
     print("Complete!")
 
 
@@ -43,8 +43,9 @@ def FakeItem(n):
             item_category=all_categories[categories_index],
             condition=all_conditions[conditions_index],
             room=all_rooms[rooms_index],
-            value=random.randint(1, 8324832),
+            value=random.randint(1, 5000),
         )
+
 
 
 if __name__ == '__main__':

@@ -14,18 +14,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # @api_view(['GET'])
 def mainview(request):
-    item_list = Item.objects.all()
-    paginator = Paginator(item_list, 25)  # Show 25 contacts per page.
-    page_number = request.GET.get('page')
-    try:
-        page_obj = paginator.get_page(page_number)  # returns the desired page object
-    except PageNotAnInteger:
-        # if page_number is not an integer then assign the first page
-        page_obj = paginator.page(1)
-    except EmptyPage:
-        # if page is empty then return last page
-        page_obj = paginator.page(paginator.num_pages)
-
     if request.method == 'POST':
         room_form = RoomForm(request.POST, prefix='room')
         category_form = CategoryForm(request.POST, prefix='category')
@@ -43,31 +31,29 @@ def mainview(request):
             print("this worked")
         return HttpResponseRedirect('/')
     else:
+        # generate forms
         room_form = RoomForm(prefix='room')
         category_form = CategoryForm(prefix='category')
         condition_form = ConditionForm(prefix='condition')
         item_form = ItemForm(prefix='item')
 
-        # item_list = Item.objects.all()
+
+        #shows item list
+        item_list = Item.objects.all()
         item_filter = ItemFilter(request.GET, queryset=item_list)
         if item_filter.is_valid():
             item_list = item_filter.qs
 
-        # paginator = Paginator(item_list, 25)  # Show 25 contacts per page.
-        # page_number = request.GET.get('page')
-        # try:
-        #     page_obj = paginator.get_page(page_number)  # returns the desired page object
-        # except PageNotAnInteger:
-        #     # if page_number is not an integer then assign the first page
-        #     page_obj = paginator.page(1)
-        # except EmptyPage:
-        #     # if page is empty then return last page
-        #     page_obj = paginator.page(paginator.num_pages)
-
-
-        # serializer = ProductSerializer(queryset, many=True)
-        # context = {}
-        # context["itemlist"] = Item.objects.all()
+        paginator = Paginator(item_list, 20)  # Show 25 contacts per page.
+        page_number = request.GET.get('page', 1)
+        try:
+            page_obj = paginator.get_page(page_number)  # returns the desired page object
+        except PageNotAnInteger:
+            # if page_number is not an integer then assign the first page
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            # if page is empty then return last page
+            page_obj = paginator.page(paginator.num_pages)
 
     return render(request, 'catalog/main.html', {'room': room_form,
                                                  'category': category_form,

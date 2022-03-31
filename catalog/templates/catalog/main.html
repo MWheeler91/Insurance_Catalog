@@ -105,7 +105,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in item_list %}
+                    {% for item in page_obj %}
                         <th>{{ forloop.counter }}</th>
                             <td>{{ item.id }}</td>
                             <td>{{ item.item_name }}</td>
