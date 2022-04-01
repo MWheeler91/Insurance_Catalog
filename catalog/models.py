@@ -33,4 +33,7 @@ class Item(models.Model):
     value = models.DecimalField(max_digits=100, decimal_places=2)
     date_entered = models.DateField(default=datetime.now)
 
+    def __str__(self):
+        return "{}".format(self.item_name)
+
 

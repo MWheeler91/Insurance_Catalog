@@ -20,7 +20,7 @@ fakegen = Faker()
 def main():
     print("Populating the script!")
 
-    FakeItem(30000)
+    FakeItem(5000)
     print("Complete!")
 
 
